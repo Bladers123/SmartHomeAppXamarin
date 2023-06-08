@@ -12,7 +12,7 @@ namespace SmartHomeApp.Views
         public AboutPage()
         {
             InitializeComponent();
-            BindingContext = new AboutViewModel();
+            BindingContext = new ThingsViewModel();
         }
     }
 }

@@ -1,0 +1,12 @@
+﻿<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SmartHomeApp.Views.AboutPage"
+             xmlns:vm="clr-namespace:SmartHomeApp.ViewModels"
+             Title="{Binding Title}">
+    
+<StackLayout Padding="20" Spacing="10">
+    <Label Text="Smart Home App" FontSize="24" HorizontalOptions="Center" />
+    <Label Text="Shelly-Steckdose:" FontSize="18" />
+    <Button x:Name="ToggleShellyButton" Text="Ein/Aus" Command="{Binding AddDeviceCommand}"/>
+</StackLayout>
+</ContentPage>
