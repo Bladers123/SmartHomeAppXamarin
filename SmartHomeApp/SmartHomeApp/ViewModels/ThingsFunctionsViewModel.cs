@@ -7,14 +7,14 @@ using Xamarin.Forms;
 
 namespace SmartHomeApp.ViewModels
 {
-    public class ThingsViewModel : BaseViewModel
+    public class ThingsFunctionsViewModel : BaseViewModel
     {
 
         //Stellt eine Klasse zum Senden von HTTP-Anforderungen und Empfangen von HTTP-Antworten
         private readonly HttpClient httpClient;
         private readonly string shellyIpAddress;
 
-        public ThingsViewModel()
+        public ThingsFunctionsViewModel()
         {
             Title = "Geräte";
             AddDeviceCommand = new Command(OnAddDevice);
