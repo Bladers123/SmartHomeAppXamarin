@@ -10,6 +10,8 @@ namespace SmartHomeApp.Views
         {
             InitializeComponent();
             BindingContext = new ItemDetailViewModel();
+            BindingContext = new Services.Connection();
+            
         }
     }
 }

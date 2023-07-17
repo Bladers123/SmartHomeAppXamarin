@@ -9,8 +9,9 @@ namespace SmartHomeApp.ViewModels
 {
     public class NewItemViewModel : BaseViewModel
     {
-        private string text;
+        private string name;
         private string description;
+        private string ip;
 
         public NewItemViewModel()
         {
@@ -20,16 +21,17 @@ namespace SmartHomeApp.ViewModels
                 (_, __) => SaveCommand.ChangeCanExecute();
         }
 
+        // Abfrage ob die Felder leer sind
         private bool ValidateSave()
         {
-            return !String.IsNullOrWhiteSpace(text)
-                && !String.IsNullOrWhiteSpace(description);
+            return !String.IsNullOrWhiteSpace(name)
+                && !String.IsNullOrWhiteSpace(ip);
         }
 
-        public string Text
+        public string Name
         {
-            get => text;
-            set => SetProperty(ref text, value);
+            get => name;
+            set => SetProperty(ref name, value);
         }
 
         public string Description
@@ -38,9 +40,17 @@ namespace SmartHomeApp.ViewModels
             set => SetProperty(ref description, value);
         }
 
+        public string Ip
+        {
+            get => ip;
+            set => SetProperty(ref ip, value);
+        }
+
         public Command SaveCommand { get; }
         public Command CancelCommand { get; }
 
+
+        // Schließt das Fenster
         private async void OnCancel()
         {
             // This will pop the current page off the navigation stack
@@ -52,8 +62,9 @@ namespace SmartHomeApp.ViewModels
             Item newItem = new Item()
             {
                 Id = Guid.NewGuid().ToString(),
-                Text = Text,
-                Description = Description
+                Name = Name,
+                Description = Description,
+                Ip = Ip
             };
 
             await DataStore.AddItemAsync(newItem);

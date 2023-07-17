@@ -5,18 +5,17 @@ using System.Windows.Input;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
-namespace SmartHomeApp.ViewModels
-{
-    public class ThingsFunctionsViewModel : BaseViewModel
+namespace SmartHomeApp.Services
+{ 
+    internal class Connection
     {
 
         //Stellt eine Klasse zum Senden von HTTP-Anforderungen und Empfangen von HTTP-Antworten
         private readonly HttpClient httpClient;
         private readonly string shellyIpAddress;
 
-        public ThingsFunctionsViewModel()
+        public Connection()
         {
-            Title = "Geräte";
             AddDeviceCommand = new Command(OnAddDevice);
 
             this.httpClient = new HttpClient();

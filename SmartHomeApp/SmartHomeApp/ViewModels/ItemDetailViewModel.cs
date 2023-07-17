@@ -9,15 +9,19 @@ namespace SmartHomeApp.ViewModels
     [QueryProperty(nameof(ItemId), nameof(ItemId))]
     public class ItemDetailViewModel : BaseViewModel
     {
+       
+       
         private string itemId;
-        private string text;
+        private string name;
         private string description;
+        private string ip;
+
         public string Id { get; set; }
 
-        public string Text
+        public string Name
         {
-            get => text;
-            set => SetProperty(ref text, value);
+            get => name;
+            set => SetProperty(ref name, value);
         }
 
         public string Description
@@ -38,6 +42,11 @@ namespace SmartHomeApp.ViewModels
                 LoadItemId(value);
             }
         }
+        public string Ip
+        {
+            get => ip;
+            set => SetProperty(ref ip, value);
+        }
 
         public async void LoadItemId(string itemId)
         {
@@ -45,8 +54,9 @@ namespace SmartHomeApp.ViewModels
             {
                 var item = await DataStore.GetItemAsync(itemId);
                 Id = item.Id;
-                Text = item.Text;
+                Name = item.Name;
                 Description = item.Description;
+                Ip = item.Ip;
             }
             catch (Exception)
             {

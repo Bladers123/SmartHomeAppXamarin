@@ -7,12 +7,12 @@ using Xamarin.Forms.Xaml;
 
 namespace SmartHomeApp.Views
 {
-    public partial class AboutPage : ContentPage
+    public partial class AddThingPage : ContentPage
     {
-        public AboutPage()
-        {
+        public AddThingPage()
+        { 
             InitializeComponent();
-            BindingContext = new ThingsFunctionsViewModel();
+            BindingContext = new ViewModels.AddThingPageViewModel();
         }
     }
 }

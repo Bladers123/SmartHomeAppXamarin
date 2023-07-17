@@ -1,14 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="SmartHomeApp.Views.ItemDetailPage"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             x:Class="SmartHomeApp.Views.ItemDetailPage"  
              Title="{Binding Title}">
 
     <StackLayout Spacing="20" Padding="15">
-        <Label Text="Text:" FontSize="Medium" />
-        <Label Text="{Binding Text}" FontSize="Small"/>
-        <Label Text="Description:" FontSize="Medium" />
+        <Label Text="Gerät:" FontSize="Medium"/>
+        <Label Text="{Binding Name}" FontSize="Small"/>
+        <Label Text="Beschreibung:" FontSize="Medium" />
         <Label Text="{Binding Description}" FontSize="Small"/>
+        <Label Text="Ip-Adresse:" FontSize="Medium" />
+        <Label Text="{Binding Ip}" FontSize="Small"/>
+        
+        <Label Text="Funktionen" FontSize="24" HorizontalOptions="Center" />
+        <Label Text="{Binding Name}" FontSize="18" />
+        <Button x:Name="ToggleShellyButton" Text="Ein/Aus"/>
     </StackLayout>
+    
     
 </ContentPage>
