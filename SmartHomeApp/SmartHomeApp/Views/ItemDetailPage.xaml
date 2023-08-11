@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
              x:Class="SmartHomeApp.Views.ItemDetailPage"  
-             Title="{Binding Title}">
+             Title="{Binding Name}">
 
     <StackLayout Spacing="20" Padding="15">
         <Label Text="Gerät:" FontSize="Medium"/>
@@ -11,11 +11,11 @@
         <Label Text="{Binding Description}" FontSize="Small"/>
         <Label Text="Ip-Adresse:" FontSize="Medium" />
         <Label Text="{Binding Ip}" FontSize="Small"/>
-        
+
         <Label Text="Funktionen" FontSize="24" HorizontalOptions="Center" />
         <Label Text="{Binding Name}" FontSize="18" />
-        <Button x:Name="ToggleShellyButton" Text="Ein/Aus"/>
+        <Button Text="Ein/Aus" Command="{Binding AddDeviceCommand}" IsEnabled="{Binding IsButtonEnabled}"/>
+        <Label Text="Aktueller Watt-Verbrauch:" />
+        <Label Text="{Binding WattLabel}" FontSize="Large"/>
     </StackLayout>
-    
-    
 </ContentPage>

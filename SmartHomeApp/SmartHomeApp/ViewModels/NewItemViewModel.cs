@@ -1,4 +1,5 @@
 ﻿using SmartHomeApp.Models;
+using SmartHomeApp.Views;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,6 +13,8 @@ namespace SmartHomeApp.ViewModels
         private string name;
         private string description;
         private string ip;
+
+    
 
         public NewItemViewModel()
         {
@@ -54,7 +57,7 @@ namespace SmartHomeApp.ViewModels
         private async void OnCancel()
         {
             // This will pop the current page off the navigation stack
-            await Shell.Current.GoToAsync("..");
+            await Shell.Current.GoToAsync($"..");
         }
 
         private async void OnSave()
@@ -70,7 +73,7 @@ namespace SmartHomeApp.ViewModels
             await DataStore.AddItemAsync(newItem);
 
             // This will pop the current page off the navigation stack
-            await Shell.Current.GoToAsync("..");
+            await Shell.Current.GoToAsync($"..");
         }
     }
 }

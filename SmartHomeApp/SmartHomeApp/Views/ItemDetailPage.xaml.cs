@@ -1,6 +1,7 @@
 ﻿using SmartHomeApp.ViewModels;
 using System.ComponentModel;
 using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
 
 namespace SmartHomeApp.Views
 {
@@ -10,8 +11,6 @@ namespace SmartHomeApp.Views
         {
             InitializeComponent();
             BindingContext = new ItemDetailViewModel();
-            BindingContext = new Services.Connection();
-            
         }
     }
 }

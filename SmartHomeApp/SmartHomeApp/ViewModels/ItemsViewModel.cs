@@ -19,7 +19,7 @@ namespace SmartHomeApp.ViewModels
 
         public ItemsViewModel()
         {
-            Title = "Geräte";
+            Title = "Meine Geräte";
             Items = new ObservableCollection<Item>();
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
 
@@ -80,5 +80,6 @@ namespace SmartHomeApp.ViewModels
             // This will push the ItemDetailPage onto the navigation stack
             await Shell.Current.GoToAsync($"{nameof(ItemDetailPage)}?{nameof(ItemDetailViewModel.ItemId)}={item.Id}");
         }
+   
     }
 }

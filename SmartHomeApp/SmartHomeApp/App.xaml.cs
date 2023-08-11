@@ -1,4 +1,5 @@
-﻿using SmartHomeApp.Services;
+﻿using SmartHomeApp.Client;
+using SmartHomeApp.Services;
 using SmartHomeApp.Views;
 using System;
 using Xamarin.Forms;
@@ -14,6 +15,8 @@ namespace SmartHomeApp
             InitializeComponent();
 
             DependencyService.Register<MockDataStore>();
+            DependencyService.RegisterSingleton<ConnectionThingService>(new ConnectionThingService());
+            DependencyService.Register<IConnectionService, ConnectionService>();
             MainPage = new AppShell();
         }
 

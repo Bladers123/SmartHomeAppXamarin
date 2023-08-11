@@ -5,11 +5,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Xamarin.Forms;
+using System.Windows.Input;
 
 namespace SmartHomeApp.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
-    {
+    {      
         public IDataStore<Item> DataStore => DependencyService.Get<IDataStore<Item>>();
 
         bool isBusy = false;
@@ -39,15 +40,35 @@ namespace SmartHomeApp.ViewModels
             return true;
         }
 
+        private bool _isButtonEnabled;
+        public bool IsButtonEnabled
+        {
+            get => _isButtonEnabled;
+            set
+            {
+                if (_isButtonEnabled != value)
+                {
+                    _isButtonEnabled = value;
+                    OnPropertyChanged(nameof(IsButtonEnabled));
+                }
+            }
+        }
+
+        string wattLabel = string.Empty;
+        public string WattLabel
+        {
+            get { return wattLabel; }
+            set
+            {
+                SetProperty(ref wattLabel, value);
+            }
+        }
+
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
-            var changed = PropertyChanged;
-            if (changed == null)
-                return;
-
-            changed.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
     }

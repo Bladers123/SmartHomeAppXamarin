@@ -15,7 +15,7 @@ namespace SmartHomeApp.Views
         public NewItemPage()
         {
             InitializeComponent();
-            BindingContext = new NewItemViewModel();
-        }
+            BindingContext = new NewItemViewModel();           
+        }   
     }
 }

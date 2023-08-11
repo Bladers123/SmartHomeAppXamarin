@@ -2,7 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Threading.Tasks; 
+
 
 namespace SmartHomeApp.Services
 {
@@ -14,10 +15,10 @@ namespace SmartHomeApp.Services
         {
             items = new List<Item>()
             {
-                new Item { Id = Guid.NewGuid().ToString(), Name = "First item", Description="This is an item description." },
-        //        new Item { Id = Guid.NewGuid().ToString(), Name = "Second item", Description="This is an item description." },
-        //        new Item { Id = Guid.NewGuid().ToString(), Name = "Third item", Description="This is an item description." },
-        //        new Item { Id = Guid.NewGuid().ToString(), Name = "Fourth item", Description="This is an item description." },
+                new Item { Id = Guid.NewGuid().ToString(), Name = "Steckdose", Description="Für die Lampe im Schlafzimmer.", Ip="192.168.188.45"},
+                new Item { Id = Guid.NewGuid().ToString(), Name = "Second item", Description="This is an item description.", Ip="132.111.133.1"},
+                new Item { Id = Guid.NewGuid().ToString(), Name = "Third item", Description="This is an item description.", Ip= "1.1.1.1" },
+                new Item { Id = Guid.NewGuid().ToString(), Name = "Fourth item", Description="This is an item description.", Ip = "192.168.5.3" },
         //        new Item { Id = Guid.NewGuid().ToString(), Name = "Fifth item", Description="This is an item description." },
         //        new Item { Id = Guid.NewGuid().ToString(), Name = "Sixth item", Description="This is an item description." }
             };

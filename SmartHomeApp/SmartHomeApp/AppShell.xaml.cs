@@ -11,6 +11,7 @@ namespace SmartHomeApp
         public AppShell()
         {
             InitializeComponent();
+            BindingContext = new AppShellViewModel();
             Routing.RegisterRoute(nameof(ItemDetailPage), typeof(ItemDetailPage));
             Routing.RegisterRoute(nameof(NewItemPage), typeof(NewItemPage));
         }
