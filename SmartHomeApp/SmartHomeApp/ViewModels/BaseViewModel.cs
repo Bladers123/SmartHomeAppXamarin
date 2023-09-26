@@ -10,7 +10,7 @@ using System.Windows.Input;
 namespace SmartHomeApp.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
-    {      
+    {
         public IDataStore<Item> DataStore => DependencyService.Get<IDataStore<Item>>();
 
         bool isBusy = false;
@@ -38,31 +38,7 @@ namespace SmartHomeApp.ViewModels
             onChanged?.Invoke();
             OnPropertyChanged(propertyName);
             return true;
-        }
-
-        private bool _isButtonEnabled;
-        public bool IsButtonEnabled
-        {
-            get => _isButtonEnabled;
-            set
-            {
-                if (_isButtonEnabled != value)
-                {
-                    _isButtonEnabled = value;
-                    OnPropertyChanged(nameof(IsButtonEnabled));
-                }
-            }
-        }
-
-        string wattLabel = string.Empty;
-        public string WattLabel
-        {
-            get { return wattLabel; }
-            set
-            {
-                SetProperty(ref wattLabel, value);
-            }
-        }
+        }    
 
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;

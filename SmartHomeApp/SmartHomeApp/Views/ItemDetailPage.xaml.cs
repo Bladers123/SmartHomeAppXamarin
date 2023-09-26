@@ -12,5 +12,15 @@ namespace SmartHomeApp.Views
             InitializeComponent();
             BindingContext = new ItemDetailViewModel();
         }
+
+        private void Switch_Toggled(object sender, ToggledEventArgs e)
+        {
+            var vm = BindingContext as ItemDetailViewModel;
+
+            var newValue = e.Value;
+            var oldValue = !newValue;     
+
+            vm.ToggledHasChanged(oldValue,newValue);
+        }
     }
 }

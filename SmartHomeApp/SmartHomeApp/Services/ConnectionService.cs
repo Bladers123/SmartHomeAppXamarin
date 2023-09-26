@@ -1,6 +1,7 @@
 ﻿using Android.Telecom;
 using SmartHomeApp.Client;
 using System;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -15,9 +16,7 @@ public interface IConnectionService
     void StopCheckingConnection();
 }
 
-
-
-public class ConnectionService : IConnectionService
+public class ConnectionService : IConnectionService, IDisposable
 {
     private readonly RestClient restClient;
     private Timer _connectionCheckTimer;
@@ -34,7 +33,7 @@ public class ConnectionService : IConnectionService
             await restClient.GetFromServerAsync($"http://{url}/status");
             return true;
         }
-        catch(Exception ex)
+        catch (Exception )
         {
             return false;
         }
@@ -55,5 +54,10 @@ public class ConnectionService : IConnectionService
     public void StopCheckingConnection()
     {
         _connectionCheckTimer?.Dispose();
+    }
+
+    public void Dispose()
+    {
+       // restClient.Dispose();
     }
 }

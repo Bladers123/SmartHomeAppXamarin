@@ -2,9 +2,12 @@
 using SmartHomeApp.Views;
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Xamarin.Forms;
+using SmartHomeApp.Services;
 
 namespace SmartHomeApp.ViewModels
 {
@@ -15,17 +18,15 @@ namespace SmartHomeApp.ViewModels
         public ObservableCollection<Item> Items { get; }
         public Command LoadItemsCommand { get; }
         public Command AddItemCommand { get; }
-        public Command<Item> ItemTapped { get; }
+
 
         public ItemsViewModel()
         {
             Title = "Meine Geräte";
             Items = new ObservableCollection<Item>();
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
-
             ItemTapped = new Command<Item>(OnItemSelected);
-
-            AddItemCommand = new Command(OnAddItem);
+            AddItemCommand = new Command(OnAddItem);            
         }
 
         async Task ExecuteLoadItemsCommand()
@@ -72,14 +73,21 @@ namespace SmartHomeApp.ViewModels
             await Shell.Current.GoToAsync(nameof(NewItemPage));
         }
 
-        async void OnItemSelected(Item item)
-        {
-            if (item == null)
-                return;
 
-            // This will push the ItemDetailPage onto the navigation stack
-            await Shell.Current.GoToAsync($"{nameof(ItemDetailPage)}?{nameof(ItemDetailViewModel.ItemId)}={item.Id}");
+        public Command<Item> ItemTapped { get; }
+        private async void OnItemSelected(Item item)
+        {
+            ItemDetailViewModel viewModel = new ItemDetailViewModel();
+
+            if (item != null && await viewModel.DeviceCheckAsync(item.Ip)) 
+            {
+                ActivityIndicatorStatusService.IsActivityIndicatorOn();
+                await Shell.Current.GoToAsync($"{nameof(ItemDetailPage)}?{nameof(ItemDetailViewModel.ItemId)}={item.Id}");
+                ActivityIndicatorStatusService.IsActivityIndicatorOff();
+            }
+
+            else
+                return;
         }
-   
     }
 }

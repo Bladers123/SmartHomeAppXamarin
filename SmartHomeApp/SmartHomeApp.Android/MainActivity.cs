@@ -4,6 +4,7 @@ using Android.App;
 using Android.Content.PM;
 using Android.Runtime;
 using Android.OS;
+using Android.Util;
 
 namespace SmartHomeApp.Droid
 {
@@ -14,6 +15,9 @@ namespace SmartHomeApp.Droid
         {
             base.OnCreate(savedInstanceState);
 
+            AndroidEnvironment.UnhandledExceptionRaiser += AndroidEnvironmentOnUnhandledExceptionRaiser;
+
+
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             LoadApplication(new App());
@@ -23,6 +27,12 @@ namespace SmartHomeApp.Droid
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
 
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+
+        private void AndroidEnvironmentOnUnhandledExceptionRaiser(object sender, RaiseThrowableEventArgs raiseThrowableEventArgs)
+        {
+            // Loggen oder behandeln Sie die Exception hier
+            Log.Error("MeineApp", raiseThrowableEventArgs.Exception.ToString());
         }
     }
 }

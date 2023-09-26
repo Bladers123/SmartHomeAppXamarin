@@ -1,84 +1,166 @@
-﻿using SmartHomeApp.Client;
-using SmartHomeApp.Services;
+﻿using SmartHomeApp.Services;
+using SmartHomeApp.Views;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+using System.Diagnostics;
 using System.Net;
+using System.Net.Http;
+using System.Reflection;
+using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using Xamarin.Forms;
+
 
 namespace SmartHomeApp.ViewModels
 {
     [QueryProperty(nameof(ItemId), nameof(ItemId))]
     public class ItemDetailViewModel : BaseViewModel
     {
-
-        ConnectionThingService connectionThingService;
+        ConnectionDeviceService connectionThingService;
         private bool updatePowerStatusIsRunning;
+        private bool initDone = false;
+
         public ItemDetailViewModel()
         {
-            Title = "Gerät";
-            IsButtonEnabled = true;
-            this.updatePowerStatusIsRunning = false;
-            AddDeviceCommand = new Command(async () => await OnDevice());
-            connectionThingService = DependencyService.Get<ConnectionThingService>();
-            // this.shellyIpAddress = "192.168.188.45"; // Schule 192.168.216.116 -- Zuhause 192.168.188.45
+            connectionThingService = DependencyService.Get<ConnectionDeviceService>();
         }
 
-        private void AfterLoadId()
+        public async Task SetDeviceStateToSwitch()
         {
-            CanConnectToService();
-            StartUpdatingPowerStatus();
+            bool? result = null;
+            int maxIterations = 3;
+            int iterator = 0;
+
+            while (result == null && iterator < maxIterations)
+            {
+                result = await connectionThingService.IsShellyOnAsync(Ip);
+                iterator++;
+            }
+
+            if (result == null)
+            {
+                await Shell.Current.DisplayAlert("Fehler", "Verbindung nicht möglich", "OK");
+                return;
+            }
+
+            else
+                IsSwitchedOn = (bool)result;
+
+            if (IsSwitchedOn == false)
+                initDone = true;
         }
 
-        public ICommand AddDeviceCommand { get; }
+        private bool _isSwitchedOn;
+        public bool IsSwitchedOn
+        {
+            get => _isSwitchedOn;
+            set
+            {
+                _isSwitchedOn = value;
+                OnPropertyChanged(nameof(IsSwitchedOn));
+            }
+        }
 
-        public async Task OnDevice()
+        private string _onOffLabel = "Aus";
+        public string OnOffLabel
+        {
+            get => _onOffLabel;
+            set
+            {
+                _onOffLabel = value;
+                OnPropertyChanged(nameof(OnOffLabel));
+            }
+        }
+
+        public void ToggledHasChanged(bool oldValue, bool newValue)
+        {
+            // Hier gehe ich rein, wenn Steckdose an ist und ich gerade das erste mal aufgerufen werde
+            if (!initDone && newValue) { }
+            else
+            {
+                Task.Run(async () => await TurnToggleAsync());
+            }
+            OnOffLabel = newValue ? "Ein" : "Aus";
+            initDone = true;
+        }
+
+        private async Task AfterLoadId()
+        {
+            CanConnectToService();  
+            StartUpdatingPowerStatus();
+
+            var task = Task.Run(async () =>
+            {
+                try
+                {
+                    await SetDeviceStateToSwitch();
+                }
+                catch
+                {
+                    return false;
+                }
+
+                return true;
+            });
+            // Verwenden Sie 'await', um auf das Ergebnis zu warten, ohne den Thread zu blockieren.
+            bool result = await task;
+
+            if (result == false)
+            {
+                await Shell.Current.DisplayAlert("Fehler", "Verbindung zum Shelly-Gerät nicht möglich.", "OK");
+                await Shell.Current.Navigation.PopAsync();
+            }
+        }
+
+        public async Task TurnToggleAsync()
+        {
+            if (await connectionThingService.TurnToggleAsync(Ip) == null)
+            {
+                await Shell.Current.DisplayAlert("Fehler", "Die Shelly-Steckdose konnte nicht geschaltet werden.", "OK");
+                return;
+            }
+        }
+
+        // TODO könnte einen gründlicheren Check haben. 
+        public async Task<bool> DeviceCheckAsync(string Ip)
         {
             try
             {
-                IsButtonEnabled = false;
-
                 // prüft ob die validierung stimmt
                 if (!IPAddress.TryParse(Ip, out IPAddress ipAddress))
                 {
                     await Shell.Current.DisplayAlert("Fehler", "Ip ungültig.", "OK");
-                    await setButtonEnablePropertyOnTrue();
-                    return;
+                    return false;
                 }
 
                 // prüft ob die Adresse erreichbar ist
-                else if (!await connectionThingService.IsPingSuccessfull(Ip))
+                if (!await connectionThingService.IsPingSuccessfull(Ip))
                 {
                     await Shell.Current.DisplayAlert("Fehler", "Nicht im lokalen Netzwerk erreichbar!", "OK");
-                    await setButtonEnablePropertyOnTrue();
-                    return;
+                    return false;
                 }
 
-                // prüft ob ein und ausgeschaltet werden kann
-                if (await connectionThingService.TurnToggleAsync(Ip) == null)
-                {
-                    await Shell.Current.DisplayAlert("Fehler", "Die Shelly-Steckdose konnte nicht geschaltet werden.", "OK");
-                    await setButtonEnablePropertyOnTrue();
-                    return;
-                }
+                return true;
             }
-            // j
+            catch (HttpRequestException ex)
+            {
+                await Shell.Current.DisplayAlert("Fehler", $"Verbindung zum Server konnte nicht hergestellt werden. " + ex.Message, "OK");
+                return false;
+            }
             catch (Exception ex)
             {
-                await Shell.Current.DisplayAlert("Fehler", $"Ein Fehler ist aufgetreten: {ex.Message}", "OK");
-                await setButtonEnablePropertyOnTrue();
+                await Shell.Current.DisplayAlert("Fehler", "Etwas ist schief gelaufen: " + ex.Message, "OK");
+                return false;
             }
-
-            await setButtonEnablePropertyOnTrue();
         }
 
-        private async Task setButtonEnablePropertyOnTrue()
+        string wattLabel = string.Empty;
+        public string WattLabel
         {
-            await Task.Delay(1000);
-            IsButtonEnabled = true;
+            get { return wattLabel; }
+            set
+            {
+                SetProperty(ref wattLabel, value);
+            }
         }
 
         private async Task UpdatePowerStatus()
@@ -91,11 +173,12 @@ namespace SmartHomeApp.ViewModels
             try
             {
                 double powerStatus = await connectionThingService.GetPowerStatusAsync(Ip);
-                WattLabel = powerStatus.ToString() + " W";
+                WattLabel = powerStatus.ToString() + " Watt";
             }
-            catch (Exception ex)
+            catch (TargetInvocationException tie)
             {
-                await Shell.Current.DisplayAlert("Fehler", $"Ein Fehler ist aufgetreten: {ex.Message}", "OK");
+                await Shell.Current.DisplayAlert("Fehler", $"Ein Fehler ist in der Methode 'UpdatePowerStatus' aufgetreten: {tie.InnerException.Message}", "OK");
+
             }
             finally
             {
@@ -105,58 +188,72 @@ namespace SmartHomeApp.ViewModels
 
         private void StartUpdatingPowerStatus()
         {
-            Device.StartTimer(TimeSpan.FromSeconds(4), () =>
+            Xamarin.Forms.Device.StartTimer(TimeSpan.FromSeconds(4), () =>
             {
                 if (!updatePowerStatusIsRunning)
-                    UpdatePowerStatus();
+                {
+                    var task = Task.Run(async () => { await UpdatePowerStatus(); });
+
+                    if (task.Exception != null)
+                    {
+                        try
+                        {
+                            task.Wait();
+                        }
+                        catch (Exception)
+                        {
+                        }
+                    }
+                }
 
                 return true; // Hiermit stellen Sie sicher, dass der Timer weiterläuft
             });
         }
 
+        // TODO falls innerException Fehler
         private void CanConnectToService()
         {
             var connectionService = DependencyService.Get<IConnectionService>();
 
-            connectionService.StartCheckingConnection(Ip, (canConnect) =>
+            connectionService.StartCheckingConnection(Ip, async (canConnect) =>
             {
                 if (canConnect)
                 {
-                    // Verbindung erfolgreich
+                    return;// Verbindung erfolgreich
                 }
                 else
                 {
-                    // Verbindung fehlgeschlagen
+                    await Shell.Current.DisplayAlert("Fehler", "Fehler beim Verbinden des Services.", "OK"); // Verbindung fehlgeschlagen
+                    return;
                 }
             });
 
             // Um die Überprüfung zu stoppen:
-            // connectionService.StopCheckingConnection();
+            connectionService.StopCheckingConnection();
         }
 
 
 
-
-
-        private string itemId;
-        private string name;
-        private string description;
-        private string ip;
-
         public string Id { get; set; }
 
+
+        private string name;
         public string Name
         {
             get => name;
             set => SetProperty(ref name, value);
         }
 
+
+        private string description;
         public string Description
         {
             get => description;
             set => SetProperty(ref description, value);
         }
 
+
+        private string itemId;
         public string ItemId
         {
             get
@@ -167,9 +264,11 @@ namespace SmartHomeApp.ViewModels
             {
                 itemId = value;
                 LoadItemId(value);
-                AfterLoadId();
+                Task.Run(async () => await AfterLoadId()); 
             }
         }
+
+        private string ip;
         public string Ip
         {
             get => ip;

@@ -2,20 +2,30 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
              x:Class="SmartHomeApp.Views.ItemDetailPage"  
-             Title="{Binding Name}">
+             Title="Gerät"
+             xmlns:vm ="clr-namespace:SmartHomeApp.ViewModels">
+
+    <ContentPage.BindingContext>
+        <vm:ItemDetailViewModel />
+    </ContentPage.BindingContext>
 
     <StackLayout Spacing="20" Padding="15">
-        <Label Text="Gerät:" FontSize="Medium"/>
+        <Label Text="Gerät:" FontSize="Medium" FontAttributes="Bold"/>
         <Label Text="{Binding Name}" FontSize="Small"/>
-        <Label Text="Beschreibung:" FontSize="Medium" />
+        <Label Text="Beschreibung:" FontSize="Medium" FontAttributes="Bold"/>
         <Label Text="{Binding Description}" FontSize="Small"/>
-        <Label Text="Ip-Adresse:" FontSize="Medium" />
+        <Label Text="Ip-Adresse:" FontSize="Medium" FontAttributes="Bold"/>
         <Label Text="{Binding Ip}" FontSize="Small"/>
 
-        <Label Text="Funktionen" FontSize="24" HorizontalOptions="Center" />
-        <Label Text="{Binding Name}" FontSize="18" />
-        <Button Text="Ein/Aus" Command="{Binding AddDeviceCommand}" IsEnabled="{Binding IsButtonEnabled}"/>
-        <Label Text="Aktueller Watt-Verbrauch:" />
-        <Label Text="{Binding WattLabel}" FontSize="Large"/>
+        <Label Text="Funktionen" FontSize="Large" FontAttributes="Bold" HorizontalOptions="Center" />
+        <Label Text="Ein und ausschalten:" FontSize="Medium" FontAttributes="Bold"/>
+
+        <StackLayout Orientation="Horizontal" Spacing="10">
+            <Switch IsToggled="{Binding IsSwitchedOn}" Toggled="Switch_Toggled" HorizontalOptions="Start"/>
+            <Label Text="{Binding OnOffLabel}" VerticalOptions="Center" FontSize="Small"/>
+        </StackLayout>
+
+        <Label Text="Aktueller Watt-Verbrauch:" FontSize="Medium" FontAttributes="Bold"/>
+        <Label Text="{Binding WattLabel}" FontSize="Small"/>
     </StackLayout>
 </ContentPage>
