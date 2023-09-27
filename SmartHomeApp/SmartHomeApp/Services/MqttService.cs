@@ -39,11 +39,12 @@ public class MqttService
 
         try
         {
-            channel = await bootstrap.ConnectAsync("broker.hivemq.com", 1883); // Zum Beispiel ein öffentlicher Broker
+            this.channel = await bootstrap.ConnectAsync("broker.hivemq.com", 1883); // Zum Beispiel ein öffentlicher Broker
+            Debug.WriteLine("Connected to the broker successfully:"); // Zusätzliches Debugging-Statement
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Connection error: {ex.Message}");
+            Debug.WriteLine($"Connection error: {ex.Message}");
         }
     }
 
@@ -51,8 +52,16 @@ public class MqttService
     {
         if (channel != null && channel.Open)
         {
-            var subscribePacket = new SubscribePacket(1, new SubscriptionRequest(topic, QualityOfService.AtMostOnce));
-            await channel.WriteAndFlushAsync(subscribePacket);
+            try
+            {
+                var subscribePacket = new SubscribePacket(1, new SubscriptionRequest(topic, QualityOfService.AtLeastOnce));
+                await channel.WriteAndFlushAsync(subscribePacket);
+                Debug.WriteLine("Subscribe successfully: ", subscribePacket);
+            }
+            catch (Exception)
+            {
+                Debug.WriteLine("Fehler", "Fehler beim subcribe", "OK"); ;
+            }
         }
     }
 
