@@ -1,9 +1,5 @@
 ﻿using SmartHomeApp.Models;
-using SmartHomeApp.Views;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace SmartHomeApp.ViewModels
@@ -56,7 +52,6 @@ namespace SmartHomeApp.ViewModels
         // Schließt das Fenster
         private async void OnCancel()
         {
-            // This will pop the current page off the navigation stack
             await Shell.Current.GoToAsync($"..");
         }
 
@@ -72,7 +67,6 @@ namespace SmartHomeApp.ViewModels
 
             await DataStore.AddItemAsync(newItem);
 
-            // This will pop the current page off the navigation stack
             await Shell.Current.GoToAsync($"..");
         }
     }

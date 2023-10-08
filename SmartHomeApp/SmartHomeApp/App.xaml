@@ -5,10 +5,8 @@
     <Application.Resources>
         <ResourceDictionary>
             <Color x:Key="Primary">#808080</Color>
-            <!-- Silberfarben (Hellgrau) -->
             <Style TargetType="Button">
                 <Setter Property="TextColor" Value="White"></Setter>
-                <!-- Schwarzer Text -->
                 <Setter Property="VisualStateManager.VisualStateGroups">
                     <VisualStateGroupList>
                         <VisualStateGroup x:Name="CommonStates">
@@ -20,7 +18,6 @@
                             <VisualState x:Name="Disabled">
                                 <VisualState.Setters>
                                     <Setter Property="BackgroundColor" Value="White" />
-                                    <!-- Mittelgrau wenn deaktiviert -->
                                 </VisualState.Setters>
                             </VisualState>
                         </VisualStateGroup>

@@ -1,11 +1,8 @@
 ﻿using SmartHomeApp.Services;
-using SmartHomeApp.Views;
 using System;
-using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
-using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -101,7 +98,7 @@ namespace SmartHomeApp.ViewModels
 
                 return true;
             });
-            // Verwenden Sie 'await', um auf das Ergebnis zu warten, ohne den Thread zu blockieren.
+            // Verwende 'await', um auf das Ergebnis zu warten, ohne den Thread zu blockieren.
             bool result = await task;
 
             if (result == false)
@@ -206,7 +203,7 @@ namespace SmartHomeApp.ViewModels
                     }
                 }
 
-                return true; // Hiermit stellen Sie sicher, dass der Timer weiterläuft
+                return true; // Hiermit stell ich sicher, dass der Timer weiterläuft
             });
         }
 

@@ -1,16 +1,21 @@
-﻿using SmartHomeApp.Services;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Windows.Input;
+using Xamarin.Forms;
+using SmartHomeApp.Views;
+using System.Threading.Tasks;
 
 namespace SmartHomeApp.ViewModels
 {
     internal class StartSideViewModel
     {
-       public StartSideViewModel() 
+        public ICommand StartCommand { get; private set; }
+        public StartSideViewModel() 
         {
-
+            StartCommand = new Command(async () => await ExecuteStartCommand());
         }
 
+        private async Task ExecuteStartCommand()
+        {
+           await Application.Current.MainPage.Navigation.PushAsync(new ItemsPage());
+        }
     }
 }

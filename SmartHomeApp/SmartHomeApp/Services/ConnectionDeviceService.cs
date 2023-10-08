@@ -1,15 +1,11 @@
-﻿using Java.Net;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using SmartHomeApp.Client;
 using SmartHomeApp.Models;
 using System;
 using System.Linq;
-using System.Net.Http;
-using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Threading.Tasks;
-using Xamarin.Forms;
-using static Android.Bluetooth.BluetoothClass;
+
 
 namespace SmartHomeApp.Services
 {
